@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith | Modern Blog Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Custom styles */
+    .gradient-text {
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .navbar {
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .dark .navbar {
+      background-color: rgba(17, 24, 39, 0.8);
+    }
+    
+    .theme-toggle {
+      transition: all 0.3s ease;
+    }
+    
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+    }
+    
+    .reading-progress-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <!-- Reading progress bar -->
+  <div class="reading-progress-bar" id="progressBar"></div>
+  
+  <!-- Navigation -->
+  <nav class="navbar fixed top-0 w-full z-40 border-b border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <a href="#" class="flex items-center">
+            <span class="text-2xl font-bold gradient-text">Zenith</span>
+          </a>
+        </div>
+        
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-6">
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 font-medium">Home</a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 font-medium">Categories</a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 font-medium">About</a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400 font-medium">Contact</a>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <button id="themeToggle" class="theme-toggle p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:block"></i>
+          </button>
+          
+          <div class="relative">
+            <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          
+          <button class="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" id="mobileMenuButton">
+            <i class="fas fa-bars"></i>
+          </button>
+          
+          <div class="hidden md:block">
+            <a href="#" class="ml-4 px-4 py-2 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700">Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div class="hidden md:hidden absolute top-16 inset-x-0 bg-white dark:bg-gray-900 shadow-lg" id="mobileMenu">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-500">Home</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-500">Categories</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-500">About</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-500">Contact</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium bg-indigo-600 text-white hover:bg-indigo-700">Sign in</a>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 mb-10 md:mb-0">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+          Dive into <span class="gradient-text">Thought-Provoking</span> Content
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+          Discover stories, ideas, and knowledge from passionate writers around the world.
+        </p>
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          <a href="#" class="px-6 py-3 bg-indigo-600 text-white rounded-md font-medium text-center hover:bg-indigo-700 transition-colors">Start Reading</a>
+          <a href="#" class="px-6 py-3 border border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400 rounded-md font-medium text-center hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors">Become a Writer</a>
+        </div>
+      </div>
+      <div class="md:w-1/2 md:pl-10">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Person writing" class="rounded-lg shadow-xl w-full h-auto">
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Posts -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 flex items-center">
+      <span class="w-4 h-4 bg-indigo-500 rounded-full mr-3"></span>
+      Featured Articles
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Article 1 -->
+      <article class="article-card bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300">
+        <div class="h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Article thumbnail" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 px-2 py-1 rounded-full">Technology</span>
+            <span class="mx-2">•</span>
+            <span>5 min read</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#">The Future of AI in Everyday Life</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+            How artificial intelligence is rapidly transforming our daily routines from smart homes to personalized recommendations.
+          </p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Author" class="w-8 h-8 rounded-full mr-2">
+            <div>
+              <p class="text-sm font-medium">Sarah Johnson</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">May 15, 2023</p>
+            </div>
+          </div>
+        </div>
+      </article>
+      
+      <!-- Article 2 -->
+      <article class="article-card bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300">
+        <div class="h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Article thumbnail" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <span class="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 px-2 py-1 rounded-full">Productivity</span>
+            <span class="mx-2">•</span>
+            <span>8 min read</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#">10 Habits of Highly Effective Developers</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+            Learn the key habits that separate average coders from exceptional ones and how to implement them in your workflow.
+          </p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Author" class="w-8 h-8 rounded-full mr-2">
+            <div>
+              <p class="text-sm font-medium">Michael Chen</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">April 28, 2023</p>
+            </div>
+          </div>
+        </div>
+      </article>
+      
+      <!-- Article 3 -->
+      <article class="article-card bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300">
+        <div class="h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Article thumbnail" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <span class="bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300 px-2 py-1 rounded-full">Design</span>
+            <span class="mx-2">•</span>
+            <span>6 min read</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#">Minimalist Design in the Digital Age</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+            Exploring how minimalist principles are shaping user experiences and why less is often more in digital product design.
+          </p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/women/69.jpg" alt="Author" class="w-8 h-8 rounded-full mr-2">
+            <div>
+              <p class="text-sm font-medium">Emma Rodriguez</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">June 2, 2023</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+    
+    <div class="text-center mt-10">
+      <a href="#" class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">View All Articles</a>
+    </div>
+  </section>
+  
+  <!-- Newsletter -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-800">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+        Subscribe to our newsletter to receive the latest articles, tips, and insights directly to your inbox. No spam, ever.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+        <input type="email" placeholder="Your email address" class="px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-900 flex-grow focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button class="px-6 py-3 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition-colors">Subscribe</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Popular Categories -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 flex items-center">
+      <span class="w-4 h-4 bg-indigo-500 rounded-full mr-3"></span>
+      Popular Categories
+    </h2>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <a href="#" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+        <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mb-3">
+          <i class="fas fa-laptop-code text-indigo-600 dark:text-indigo-400 text-xl"></i>
+        </div>
+        <span class="font-medium">Technology</span>
+      </a>
+      
+      <a href="#" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+        <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-3">
+          <i class="fas fa-bolt text-green-600 dark:text-green-400 text-xl"></i>
+        </div>
+        <span class="font-medium">Productivity</span>
+      </a>
+      
+      <a href="#" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-3">
+          <i class="fas fa-paint-brush text-purple-600 dark:text-purple-400 text-xl"></i>
+        </div>
+        <span class="font-medium">Design</span>
+      </a>
+      
+      <a href="#" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-3">
+          <i class="fas fa-brain text-blue-600 dark:text-blue-400 text-xl"></i>
+        </div>
+        <span class="font-medium">Psychology</span>
+      </a>
+      
+      <a href="#" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+        <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mb-3">
+          <i class="fas fa-chart-line text-yellow-600 dark:text-yellow-400 text-xl"></i>
+        </div>
+        <span class="font-medium">Business</span>
+      </a>
+      
+      <a href="#" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+        <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mb-3">
+          <i class="fas fa-heart text-red-600 dark:text-red-400 text-xl"></i>
+        </div>
+        <span class="font-medium">Health</span>
+      </a>
+    </div>
+  </section>
+  
+  <!-- Popular Authors -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 flex items-center">
+      <span class="w-4 h-4 bg-indigo-500 rounded-full mr-3"></span>
+      Popular Authors
+    </h2>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm flex flex-col items-center">
+        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Author" class="w-16 h-16 rounded-full mb-3">
+        <h3 class="font-medium mb-1">Jessica Parker</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Tech Writer</p>
+        <div class="flex space-x-2">
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fas fa-globe"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm flex flex-col items-center">
+        <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Author" class="w-16 h-16 rounded-full mb-3">
+        <h3 class="font-medium mb-1">David Wilson</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">UX Designer</p>
+        <div class="flex space-x-2">
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fas fa-globe"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm flex flex-col items-center">
+        <img src="https://randomuser.me/api/portraits/women/85.jpg" alt="Author" class="w-16 h-16 rounded-full mb-3">
+        <h3 class="font-medium mb-1">Sophia Martinez</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Product Manager</p>
+        <div class="flex space-x-2">
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fas fa-globe"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm flex flex-col items-center">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Author" class="w-16 h-16 rounded-full mb-3">
+        <h3 class="font-medium mb-1">Brian Thompson</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Developer</p>
+        <div class="flex space-x-2">
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fas fa-globe"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm flex flex-col items-center">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Author" class="w-16 h-16 rounded-full mb-3">
+        <h3 class="font-medium mb-1">Olivia Kim</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Writer</p>
+        <div class="flex space-x-2">
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400">
+            <i class="fas fa-globe"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Recent Posts -->
+  <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 flex items-center">
+      <span class="w-4 h-4 bg-indigo-500 rounded-full mr-3"></span>
+      Recent Articles
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Recent Article 1 -->
+      <article class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Article thumbnail" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <span>June 10, 2023</span>
+            <span class="mx-2">•</span>
+            <span>4 min read</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#">Building a Personal Brand as a Developer</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+            Practical strategies for establishing your online presence and standing out in the competitive tech industry.
+          </p>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400 font-medium text-sm flex items-center">
+            Read More <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      </article>
+      
+      <!-- Recent Article 2 -->
+      <article class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Article thumbnail" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <span>June 8, 2023</span>
+            <span class="mx-2">•</span>
+            <span>7 min read</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#">The Psychology of Color in Web Design</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+            How different colors influence user behavior and emotions, and how to apply this knowledge to create more effective designs.
+          </p>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400 font-medium text-sm flex items-center">
+            Read More <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      </article>
+      
+      <!-- Recent Article 3 -->
+      <article class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="h-48 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Article thumbnail" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+            <span>June 5, 2023</span>
+            <span class="mx-2">•</span>
+            <span>9 min read</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#">Essential Tools for Remote Work in 2023</a>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+            A comprehensive guide to the best apps, services, and hardware for staying productive while working remotely.
+          </p>
+          <a href="#" class="text-indigo-600 dark:text-indigo-400 font-medium text-sm flex items-center">
+            Read More <i class="fas fa-arrow-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-800 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div>
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <span class="gradient-text">Zenith</span>
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6">
+            A modern platform for thought-provoking content and meaningful discussions.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+              <i class="fab fa-facebook"></i>
+            </a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-6">Navigation</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Home</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Articles</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Categories</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">About</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-6">Categories</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Technology</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Productivity</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Design</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Business</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">Psychology</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-6">Subscribe</h4>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            Get the latest articles and news delivered to your inbox.
+          </p>
+          <div class="flex">
+            <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-full">
+            <button class="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 transition-colors">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-200 dark:border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-4 md:mb-0">
+          © 2023 Zenith Blog. All rights reserved.
+        </p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm">Privacy Policy</a>
+          <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm">Terms of Service</a>
+          <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Back to top button -->
+  <button id="backToTop" class="fixed bottom-6 right-6 p-3 bg-indigo-600 text-white rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-indigo-700">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // Check for saved user preference or use system preference
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (savedTheme === 'dark') {
+      html.classList.add('dark');
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      const theme = html.classList.contains('dark') ? 'dark' : 'light';
+      localStorage.setItem('theme', theme);
+    });
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // Back to top button
+    const backToTopButton = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.remove('opacity-0', 'invisible');
+        backToTopButton.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopButton.classList.remove('opacity-100', 'visible');
+        backToTopButton.classList.add('opacity-0', 'invisible');
+      }
+    });
+    
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Reading progress bar
+    const progressBar = document.getElementById('progressBar');
+    
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollPercentage = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrollPercentage + '%';
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
