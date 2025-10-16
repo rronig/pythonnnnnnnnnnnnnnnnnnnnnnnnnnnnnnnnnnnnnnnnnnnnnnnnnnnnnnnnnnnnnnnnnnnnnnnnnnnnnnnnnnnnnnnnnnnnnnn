@@ -21,6 +21,38 @@ daily_avg = df.groupby('date')['temperature'].mean().reset_index()
 daily_avg['year_month'] = daily_avg['date'].dt.to_period('M')
 monthly_avg = daily_avg.groupby('year_month')['temperature'].mean().reset_index()
 
+# Assign seasons based on month
+def get_season(month):
+    if month in [12, 1, 2]:
+        return 'Winter'
+    elif month in [3, 4, 5]:
+        return 'Spring'
+    elif month in [6, 7, 8]:
+        return 'Summer'
+    elif month in [9, 10, 11]:
+        return 'Autumn'
+
+df['season'] = df['month'].apply(get_season)
+
+# Adjust the year so that Winter belongs to the year of December
+def adjust_season_year(row):
+    if row['month'] == 1 or row['month'] == 2:
+        return row['year'] - 1
+    else:
+        return row['year']
+
+df['season_year'] = df.apply(adjust_season_year, axis=1)
+
+# Group by season only — ignore year
+overall_seasonal_avg = df.groupby('season')['temperature'].mean().reset_index()
+
+# Sort by natural season order
+season_order = ['Winter', 'Spring', 'Summer', 'Autumn']
+overall_seasonal_avg['season'] = pd.Categorical(overall_seasonal_avg['season'], categories=season_order, ordered=True)
+overall_seasonal_avg = overall_seasonal_avg.sort_values('season')
+
+print(overall_seasonal_avg)
+
 print(monthly_avg)
 hottest_temp_value = df['temperature'].max()
 print("Hottest temps are", hottest_temp_value)
