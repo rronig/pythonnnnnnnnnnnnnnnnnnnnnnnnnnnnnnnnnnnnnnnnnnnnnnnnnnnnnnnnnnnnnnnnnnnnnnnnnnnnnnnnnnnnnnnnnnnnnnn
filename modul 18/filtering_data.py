@@ -1,0 +1,111 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# Load the dataset
+books_df = pd.read_csv('bestsellers_with_categories_2022_03_27.csv')
+
+# Streamlit app title and description
+st.title("📚 Bestselling Books Analysis")
+st.write("This app analyzes the Amazon Top Selling books from 2009 to 2022.")
+
+# Sidebar - Add new book
+st.sidebar.header("Add New Book Data")
+with st.sidebar.form("book_form"):
+    new_name = st.text_input("Book Name")
+    new_author = st.text_input("Author")
+    new_user_rating = st.slider("User Rating", 0.0, 5.0, 4.0, 0.1)
+    new_reviews = st.number_input("Reviews", min_value=0, step=1)
+    new_price = st.number_input("Price ($)", min_value=0.0, step=0.5)
+    new_year = st.number_input("Year", min_value=2009, max_value=2025, step=1)
+    new_genre = st.selectbox("Genre", books_df['Genre'].unique())
+    submit_button = st.form_submit_button(label="Add Book")
+
+# If user submits new book
+if submit_button:
+    new_data = {
+        'Name': new_name,
+        'Author': new_author,
+        'User Rating': new_user_rating,
+        'Reviews': new_reviews,
+        'Price': new_price,
+        'Year': new_year,
+        'Genre': new_genre,
+    }
+
+    books_df = pd.concat([pd.DataFrame([new_data]), books_df], ignore_index=True)
+    books_df.to_csv('bestsellers_with_categories_2022_03_27.csv', index=False)
+    st.sidebar.success('✅ New book added successfully!')
+
+# Summary Statistics
+st.subheader("📊 Summary Statistics")
+total_books = books_df.shape[0]
+unique_titles = books_df['Name'].nunique()
+average_rating = books_df['User Rating'].mean()
+average_price = books_df['Price'].mean()
+
+# Display metrics
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Total Books", total_books)
+col2.metric("Unique Titles", unique_titles)
+col3.metric("Average Rating", f"{average_rating:.2f}")
+col4.metric("Average Price", f"${average_price:.2f}")
+
+# Dataset Preview
+st.subheader("🧾 Dataset Preview")
+st.dataframe(books_df.head())
+
+# Book Title and Author Distribution
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("Top 10 Book Titles")
+    top_titles = books_df['Name'].value_counts().head(10)
+    st.bar_chart(top_titles)
+
+with col2:
+    st.subheader("Top 10 Authors")
+    top_authors = books_df['Author'].value_counts().head(10)
+    st.bar_chart(top_authors)
+
+# Genre Distribution
+st.subheader("🎭 Genre Distribution")
+fig = px.pie(
+    books_df,
+    names='Genre',
+    title='Most Liked Genre (2009–2022)',
+    color='Genre',
+    color_discrete_sequence=px.colors.sequential.Plasma
+)
+st.plotly_chart(fig)
+
+# Number of Fiction vs Non-Fiction Books Over the Years
+st.subheader("📅 Fiction vs Non-Fiction Over the Years")
+size = books_df.groupby(['Year', 'Genre']).size().reset_index(name='Counts')
+fig = px.bar(
+    size,
+    x='Year', y='Counts', color='Genre',
+    title="Number of Fiction vs Non-Fiction Books (2009–2022)",
+    color_discrete_sequence=px.colors.sequential.Plasma,
+    barmode='group'
+)
+st.plotly_chart(fig)
+
+# Top 15 Authors
+st.subheader("🏆 Top 15 Authors by Books Published")
+top_authors_df = books_df['Author'].value_counts().head(15).reset_index()
+top_authors_df.columns = ['Author', 'Count']
+fig = px.bar(
+    top_authors_df,
+    x='Count', y='Author', orientation='h',
+    title='Top 15 Authors (2009–2022)',
+    labels={'Count': 'Books Published', 'Author': 'Author'},
+    color='Count', color_continuous_scale=px.colors.sequential.Plasma
+)
+st.plotly_chart(fig)
+
+# Filter by Genre
+st.subheader("🔍 Filter Data by Genre")
+genre_filter = st.selectbox("Select Genre", books_df['Genre'].unique())
+filtered_df = books_df[books_df['Genre'] == genre_filter]
+st.write(filtered_df)
